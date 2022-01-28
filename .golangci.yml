@@ -1,0 +1,97 @@
+run:
+  concurrency: 4
+  deadline: 1m
+  issues-exit-code: 1
+  tests: false
+  skip-dirs:
+    - "ent/*"
+  skip-files:
+    - ".*_mock\\.go"
+    - "mock_.*\\.go"
+    - ".*/pkg/mod/.*$"
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+
+linters-settings:
+  errcheck:
+    check-type-assertions: false
+    check-blank: false
+  govet:
+    check-shadowing: false
+  revive:
+    ignore-generated-header: true
+    severity: warning
+  gofmt:
+    simplify: true
+  gocyclo:
+    min-complexity: 18
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 99
+  goconst:
+    min-len: 3
+    min-occurrences: 2
+  depguard:
+    list-type: blacklist
+    include-go-root: false
+    packages: []
+
+  misspell:
+    locale: US
+    ignore-words:
+      - cancelled
+  goimports:
+    local-prefixes: go.opentelemetry.io
+
+
+linters:
+  disable-all: true
+  enable:
+    - deadcode
+    - depguard
+    - errcheck
+    - gas
+    - goconst
+    - gocyclo
+    - gofmt
+    - revive
+    - govet
+    - ineffassign
+    - megacheck
+    - misspell
+    - structcheck
+    - typecheck
+    - unconvert
+    - varcheck
+    - gosimple
+    - staticcheck
+    - unused
+    - asciicheck
+    - bodyclose
+    - dogsled
+    #- dupl
+    - durationcheck
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - forbidigo
+    - forcetypeassert
+    - gocritic
+    - godot
+    - gosec
+    - ifshort
+    - nestif
+    - nilerr
+    - nlreturn
+    - noctx
+    - prealloc
+    - predeclared
+    - sqlclosecheck
+    - whitespace
+    - wrapcheck
+    - wsl
+  fast: false
