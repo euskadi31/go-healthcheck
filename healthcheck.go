@@ -23,7 +23,7 @@ func (f HandlerFunc) Check() bool {
 	return f()
 }
 
-// Response struct
+// Response struct.
 type Response struct {
 	Status   bool            `json:"status"`
 	Services map[string]bool `json:"services"`
@@ -41,7 +41,7 @@ func New() *Healthcheck {
 	}
 }
 
-// AddHealthCheck handler
+// Add HealthCheck handler.
 func (h *Healthcheck) Add(name string, handle Handler) error {
 	if _, ok := h.handlers[name]; ok {
 		return fmt.Errorf("the %s healthcheck handler already exists", name)
@@ -61,9 +61,11 @@ func (h *Healthcheck) check() *Response {
 	}
 
 	var wg = &sync.WaitGroup{}
+
 	wg.Add(size)
 
 	var mutex = &sync.Mutex{}
+
 	for name, handler := range h.handlers {
 		go func(n string, h Handler) {
 			defer wg.Done()
@@ -85,7 +87,7 @@ func (h *Healthcheck) check() *Response {
 	return response
 }
 
-// ServeHTTP implements http.Handler
+// ServeHTTP implements http.Handler.
 func (h *Healthcheck) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	code := http.StatusOK
 
@@ -98,5 +100,7 @@ func (h *Healthcheck) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(code)
 	w.Header().Set("Content-Type", "application/json")
 
-	json.NewEncoder(w).Encode(resp)
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

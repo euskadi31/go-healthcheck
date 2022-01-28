@@ -5,6 +5,7 @@
 package healthcheck
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -88,6 +89,19 @@ func TestHealthCheckServeHTTPWithSuccess(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Result().StatusCode)
 }
 
+type failWriter struct {
+}
+
+func (failWriter) Header() http.Header {
+	return http.Header{}
+}
+
+func (failWriter) WriteHeader(statusCode int) {}
+
+func (failWriter) Write(p []byte) (n int, err error) {
+	return 0, errors.New("fail")
+}
+
 func TestHealthCheckServeHTTPWithFail(t *testing.T) {
 	hc := New()
 
@@ -109,6 +123,10 @@ func TestHealthCheckServeHTTPWithFail(t *testing.T) {
 	hc.ServeHTTP(w, r)
 
 	assert.Equal(t, http.StatusServiceUnavailable, w.Result().StatusCode)
+
+	w1 := &failWriter{}
+
+	hc.ServeHTTP(w1, r)
 }
 
 func BenchmarkServeHTTP(b *testing.B) {
