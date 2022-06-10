@@ -52,7 +52,7 @@ func (h *Healthcheck) Add(name string, handle Handler) error {
 	return nil
 }
 
-func (h *Healthcheck) check() *Response {
+func (h *Healthcheck) Check() *Response {
 	size := len(h.handlers)
 
 	response := &Response{
@@ -91,7 +91,7 @@ func (h *Healthcheck) check() *Response {
 func (h *Healthcheck) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	code := http.StatusOK
 
-	resp := h.check()
+	resp := h.Check()
 
 	if !resp.Status {
 		code = http.StatusServiceUnavailable

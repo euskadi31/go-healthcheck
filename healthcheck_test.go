@@ -29,7 +29,7 @@ func TestHealthCheck(t *testing.T) {
 		return true
 	}))
 
-	response := hc.check()
+	response := hc.Check()
 
 	assert.True(t, response.Status)
 
@@ -55,7 +55,7 @@ func TestHealthcheckProcessorWithFailedCheck(t *testing.T) {
 	err = hc.Add("redis", redis)
 	assert.NoError(t, err)
 
-	response := hc.check()
+	response := hc.Check()
 
 	assert.False(t, response.Status)
 
